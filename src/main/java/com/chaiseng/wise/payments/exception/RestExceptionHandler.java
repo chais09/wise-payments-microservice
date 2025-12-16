@@ -54,7 +54,7 @@ public class RestExceptionHandler {
                 .body(new ApiError("BAD_REQUEST", "Malformed JSON request", OffsetDateTime.now()));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiError> handleAll(Exception ex) {
         // fallback
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
