@@ -49,12 +49,60 @@ public class TransferService {
 
 
         //check the currency see if both account is the same
+        if (!from.getCurrency().equals(req.getCurrency()) || !to.getCurrency().equals(req.getCurrency())) {
+            throw new BadRequestException("Currency mismatch for accounts");
+        }
 
+        BigDecimal beforeFrom = from.getBalance();
+        if (beforeFrom.compareTo(req.getAmount()) < 0) {
+            throw new InsufficientFundsException("Insufficient balance for account " + from.getId());
+        }
+        BigDecimal afterFrom = beforeFrom.subtract(req.getAmount());
+
+        BigDecimal beforeTo = to.getBalance();
+        BigDecimal afterTo = beforeTo.add(req.getAmount());
+
+        // apply updates
+        from.setBalance(afterFrom);
+        to.setBalance(afterTo);
+        accountRepo.save(from);
+        accountRepo.save(to);
+
+        // correlation id links the debit and credit
+        UUID correlationId = UUID.randomUUID();
+
+        Transaction debit = Transaction.builder()
+                .accountId(from.getId())
+                .type(TransactionType.TRANSFER_DEBIT)
+                .amount(req.getAmount())
+                .currency(req.getCurrency())
+                .balanceBefore(beforeFrom)
+                .balanceAfter(afterFrom)
+                .correlationId(correlationId)
+                .build();
+
+        Transaction credit = Transaction.builder()
+                .accountId(to.getId())
+                .type(TransactionType.TRANSFER_CREDIT)
+                .amount(req.getAmount())
+                .currency(req.getCurrency())
+                .balanceBefore(beforeTo)
+                .balanceAfter(afterTo)
+                .correlationId(correlationId)
+                .build();
+
+        txRepo.save(debit);
+        txRepo.save(credit);
 
         TransferResponse resp = new TransferResponse();
-//
+        resp.setTransferId(correlationId);
+        resp.setFromAccountId(from.getId());
+        resp.setToAccountId(to.getId());
+        resp.setAmount(req.getAmount());
+        resp.setCurrency(req.getCurrency());
+        resp.setStatus("COMPLETED");
+        resp.setCreatedAt(OffsetDateTime.now());
 
-        //
         return resp;
     }
 
