@@ -3,20 +3,18 @@ spring:
     url: jdbc:postgresql://localhost:5432/wise_payments
     username: wise_user
     password: secret
+
   jpa:
     hibernate:
-      ddl-auto: update # quick dev mode: auto create/alter tables
+      ddl-auto: update
+    open-in-view: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  application:
-    name: wise-payments-microservice
+        format_sql: true
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
 
 server:
   port: 8080
-
-management:
-  endpoint:
-    web:
-      exposure:
-        include: health,info

@@ -7,6 +7,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -58,5 +59,15 @@ public class RestExceptionHandler {
         // fallback
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiError("INTERNAL_ERROR", ex.getMessage(), OffsetDateTime.now()));
+    }
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<ApiError> handleOptimisticLock(OptimisticLockingFailureException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiError(
+                        "CONCURRENT_MODIFICATION",
+                        "The resource was updated by another request. Please retry.",
+                        OffsetDateTime.now()
+                ));
     }
 }

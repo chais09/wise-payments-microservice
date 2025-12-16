@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+@Service
 public class TransferService {
     private final AccountRepository accountRepo;
     private final TransactionRepository txRepo;

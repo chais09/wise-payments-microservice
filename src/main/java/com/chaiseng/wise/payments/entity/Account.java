@@ -18,6 +18,9 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Long version;
+
     @Column(name="owner_name", nullable = false)
     private String ownerName;
 
