@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -67,6 +68,11 @@ public class AccountService {
         txRepo.save(tx);
 
         return acc;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Account> getAllAccounts(){
+        return repo.findAll();
     }
 
     @Transactional

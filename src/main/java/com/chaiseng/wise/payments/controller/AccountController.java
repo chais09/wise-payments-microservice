@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -43,6 +44,15 @@ public class AccountController{
                 .map(AccountMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new NotFoundException("Account not found: "+ id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AccountResponse>> getAllAccount() {
+        List<AccountResponse> accounts = service.getAllAccounts()
+                .stream()
+                .map(AccountMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(accounts);
     }
 
     @PostMapping("/{id}/deposit")
