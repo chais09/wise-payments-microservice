@@ -10,10 +10,12 @@ import com.chaiseng.wise.payments.exception.NotFoundException;
 import com.chaiseng.wise.payments.repository.AccountRepository;
 
 import com.chaiseng.wise.payments.repository.TransactionRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,7 +86,7 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public List<Account> getAllAccounts(){
-        return repo.findAll();
+        return repo.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Transactional
