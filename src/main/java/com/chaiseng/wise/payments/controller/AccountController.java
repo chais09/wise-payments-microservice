@@ -38,6 +38,12 @@ public class AccountController{
         return ResponseEntity.created(URI.create("/api/v1/accounts/" + created.getId())).body(res);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        service.deleteAccount(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AccountResponse> getAccount(@PathVariable Long id) {
         return service.getAccount(id)

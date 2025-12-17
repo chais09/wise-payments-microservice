@@ -37,6 +37,17 @@ public class AccountService {
         return repo.save(a);
     }
 
+    @Transactional
+    public void deleteAccount(Long id) {
+        Account account = repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Account not found: " + id));
+        if (account.getBalance().compareTo(BigDecimal.ZERO) != 0) {
+            throw new IllegalStateException("Account balance must be zero to delete");
+        }
+        repo.delete(account);
+    }
+
+
     @Transactional(readOnly = true)
     public Optional<Account> getAccount(Long id) {
         return repo.findById(id);
