@@ -97,7 +97,7 @@ public class AccountService {
 
         BigDecimal before = acc.getBalance();
         if (before.compareTo(amount) < 0) {
-            throw new InsufficientFundsException("Insufficient balance for account " + accountId);
+            throw new InsufficientFundsException("Insufficient balance for account " + acc.getOwnerName());
         }
         BigDecimal after = before.subtract(amount);
         acc.setBalance(after);
