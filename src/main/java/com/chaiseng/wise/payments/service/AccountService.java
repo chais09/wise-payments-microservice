@@ -60,6 +60,7 @@ public class AccountService {
                 .accountId(acc.getId())
                 .balanceAfter(balanceAfter)
                 .balanceBefore(balanceBefore)
+                .amount(amount)
                 .type(TransactionType.DEPOSIT)
                 .currency(acc.getCurrency())
                 .correlationId(null)
