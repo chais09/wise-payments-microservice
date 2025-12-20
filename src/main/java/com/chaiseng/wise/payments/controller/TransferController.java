@@ -28,7 +28,6 @@ public class TransferController {
 
     @PostMapping
     public ResponseEntity<Object> createTransfer( @RequestHeader(value = "Idempotency-Key", required = false) String idempotencyKey, @Valid @RequestBody TransferRequest req) {
-        TransferResponse res = this.transferService.transfer(req);
         // 1) check existing idempotency
         Optional<IdempotencyRecord> existing = idempotencyService.checkIdempotency(idempotencyKey, req);
         if (existing.isPresent()) {
